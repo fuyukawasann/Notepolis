@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Notepolis | 질문</title>
+
+
+     <!--  Required meta tags  -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='Notepolis.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='Notepolis.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Notepolis - 간단한 강의 노트 완성"/>
+    <meta property="og:description" content="지겨운 교수님 영상은 이제 안녕. Notepolis로 강의 영상을 PDF로 요약해요."/>
+    <meta property="og:image" content="{{ url_for('static', filename='Notepolis.png') }}"/>
+
+    <!--  Bulma CSS  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/6.1.2/css/font-awesome.min.css" rel="stylesheet">
+    <!--  Font Family  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1&family=Hahmlet:wght@300&family=Nanum+Gothic&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+
+    <script src="https://kit.fontawesome.com/c1e4cacb4e.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+          // Get all "navbar-burger" elements
+          const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+          // Add a click event on each of them
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+
+            });
+          });
+
+        });
+
+
+    </script>
+</head>
+<body>
+    <nav class="navbar is-fixed-top is-success is-spaced" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong class="is-size-3 has-text-centered-touch"
+                        style="font-family: 'Noto Sans KR', sans-serif;font-size: larger;">NOTEPOLIS</strong>
+            </a>
+            <a role="button" class="navbar-burger my-2" aria-label="menu" aria-expanded="false" data-target="mainMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="mainMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item is-size-5" href="/intro">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">소개</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">강의 영상 변환</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/FAQ">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">질문</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/bug_report">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">버그 신고</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/patch">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">패치 노트</strong>
+                </a>
+            </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary" href="/register">
+                                <strong style="font-family: 'Gothic A1', sans-serif;">회원가입</strong>
+                            </a>
+                            <a class="button is-light" href="/login">
+                                <strong style="font-family: 'Gothic A1', sans-serif;">로그인</strong>
+                           </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </nav>
+    <footer class="footer">
+        <div class="content has-text-centered my-5">
+            <p>
+                <strong>NOTEPOLIS</strong>는 한양대학교 융합전자공학부 이한별에 의해 개발되었습니다.
+                이 사이트는 Open API들을 사용하여 제작되었습니다. 무단 전제 및 복제를 금합니다.
+                <br>
+                Copyright Hanbyeol Lee, 2022. Hanyang Univ. (SEOUL)    All right reserved.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

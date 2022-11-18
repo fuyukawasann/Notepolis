@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--  Webpage Title  -->
+    <title>Notepolis</title>
+
+    <!--  Required meta tags  -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='Notepolis.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='Notepolis.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Notepolis - 간단한 강의 노트 완성"/>
+    <meta property="og:description" content="지겨운 교수님 영상은 이제 안녕. Notepolis로 강의 영상을 PDF로 요약해요."/>
+    <meta property="og:image" content="{{ url_for('static', filename='Notepolis.png') }}"/>
+
+    <!--  Bulma CSS  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/6.1.2/css/font-awesome.min.css" rel="stylesheet">
+    <!--  Font Family  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1&family=Hahmlet:wght@300&family=Nanum+Gothic&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://kit.fontawesome.com/c1e4cacb4e.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+          // Get all "navbar-burger" elements
+          const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+          // Add a click event on each of them
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+
+            });
+          });
+
+        });
+
+        function manualimport() {
+            $('#filemode').addClass("is-hidden")
+            $('#urlmode').addClass("is-hidden")
+            $('#specInt').removeClass("is-hidden")
+            $('#genNoteofile').removeClass("is-hidden")
+
+        }
+
+        function urlimport() {
+            $('#filemode').addClass("is-hidden")
+            $('#urlmode').addClass("is-hidden")
+            $('#myURL').removeClass("is-hidden")
+            $('#myURLName').removeClass("is-hidden")
+            $('#genNoteourl').removeClass("is-hidden")
+        }
+
+        function importingurl() {
+            $('#myURL').addClass("is-hidden")
+            $('#myURLName').addClass("is-hidden")
+            $('#genNoteourl').addClass("is-hidden")
+            $('#loadProg').removeClass("is-hidden")
+
+            let myName = $('#myURLName').val();
+            console.log(myName);
+
+            let url = $('#myURL').val();
+            let url_size = url.length;
+            var inurl = '';
+            for(var i = 0; i < url.length - 32; i += 1) {
+                inurl += url[32 + i];
+            }
+            console.log(inurl);
+
+            let mode = "URL Mode";
+            console.log(mode);
+
+            let form_data = new FormData();
+
+            form_data.append("url_give", inurl);
+            form_data.append("mode_give", mode);
+            form_data.append("name_give", myName);
+
+            $.ajax({
+               type: "POST",
+               url: '/impVidi',
+               data: form_data,
+               cache: false,
+               contentType: false,
+               processData: false,
+               success: function (response) {
+                   let mylist = response['all_diary']
+                   console.log(mylist)
+                   let direct = mylist[0]['vidiname']
+                   console.log(direct)
+                   let pdfname = mylist[0]['name']
+                   console.log(pdfname)
+                   let mydirectory = './static/' + direct + '/' + pdfname + '.pdf'
+                   console.log(mydirectory)
+                   document.getElementById('PDFDownload').setAttribute('href', mydirectory)
+                   $('#loadProg').addClass("is-hidden")
+                   $('#PDFDownload').removeClass("is-hidden")
+               }
+            });
+
+
+        }
+
+        function importing() {
+            $('#specInt').addClass("is-hidden")
+            $('#genNoteofile').addClass("is-hidden")
+            $('#loadProg').removeClass("is-hidden")
+
+            let myName = $('#Naming').val();
+            console.log(myName);
+
+            let url = '-';
+
+            let mode = "Download Mode";
+
+            let file = $('#myVideo')[0].files[0];
+            let form_data = new FormData();
+
+            form_data.append("url_give", url);
+            form_data.append("mode_give", mode);
+            form_data.append("name_give", myName);
+            form_data.append("file_give", file);
+
+            $.ajax({
+                type: "POST",
+                url: '/impVidi',
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    let mylist = response['all_diary']
+                    console.log(mylist)
+                    let direct = mylist[0]['vidiname']
+                    console.log(direct)
+                    let pdfname = mylist[0]['name']
+                    console.log(pdfname)
+                    let mydirectory = './static/' + direct + '/' + pdfname + '.pdf'
+                    console.log(mydirectory)
+                    document.getElementById('PDFDownload').setAttribute('href', mydirectory)
+                    $('#loadProg').addClass("is-hidden")
+                    $('#PDFDownload').removeClass("is-hidden")
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+
+<!--네비게이션 바-->
+    <nav class="navbar is-fixed-top is-success is-spaced" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong class="is-size-3 has-text-centered-touch"
+                        style="font-family: 'Noto Sans KR', sans-serif;font-size: larger;">NOTEPOLIS</strong>
+            </a>
+            <a role="button" class="navbar-burger my-2" aria-label="menu" aria-expanded="false" data-target="mainMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="mainMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item is-size-5"  href="/intro">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">소개</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">강의 영상 변환</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/FAQ">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">질문</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/bug_report">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">버그 신고</strong>
+                </a>
+                <a class="navbar-item is-size-5" href="/patch">
+                    <strong style="font-family: 'Nanum Gothic', sans-serif;">패치 노트</strong>
+                </a>
+            </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary" href="/register">
+                                <strong style="font-family: 'Gothic A1', sans-serif;">회원가입</strong>
+                            </a>
+                            <a class="button is-light" href="/login">
+                                <strong style="font-family: 'Gothic A1', sans-serif;">로그인</strong>
+                           </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </nav>
+    <div class="container is-max-desktop">
+        <section class="hero is-large container">
+            <div class="hero-body">
+                <p class="title has-text-primary is-size-1">
+                    강의 영상 변환
+                </p>
+                <p class="subtitle is-size-4 ml-1 mt-1">
+                    여기에 강의 영상을 업로드하여 PDF 강의 요약 파일을 다운로드하세요.
+                    <br>
+                    마법같은 기능과 속도로 강의노트를 만들고, 시험을 수월히 준비하세요.
+                </p>
+                <p class="subtitle is-size-6 ml-1">
+                    ※ mp4 형식의 동영상 파일만 현재 가능합니다.
+                </p>
+
+
+                <a id="filemode" onclick="manualimport()" class="button is-large is-fullwidth mt-3 is-success">
+                    <i class="fa fa-file-video-o pr-3"></i>
+                    동영상 파일을 업로드
+                </a>
+
+
+                <a id="urlmode" onclick="urlimport()" class="button is-large is-fullwidth mt-3 is-success">
+                    <i class="fa fa-external-link pr-3"></i>
+                    url을 입력하여 업로드
+                </a>
+
+                {# urlmode Input #}
+                <input id="myURL" class="input is-hovered is-medium mt-3 is-hidden" type="url" placeholder="동영상을 다운로드 할 링크를 입력해주세요">
+                <input id="myURLName" class="input is-hovered is-medium mt-3 is-hidden" type="text" placeholder="저장할 이름을 입력하세요">
+
+
+                <div id="specInt" class="columns is-hidden">
+                    <div class="column is-half">
+                        <div id="upload-file" class="file is-primary is-medium is-fullwidth has-name">
+                            <label class="file-label">
+                                <input id="myVideo" class="file-input" type="file" name="resume" accept=".mp4">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        업로드
+                                    </span>
+                                </span>
+                                <span class="file-name is-expanded">
+                                    파일을 업로드 해주세요.
+                                </span>
+                            </label>
+                        </div>
+                        <script>
+                            const fileInput = document.querySelector('#upload-file input[type=file]');
+                            fileInput.onchange = () => {
+                                if (fileInput.files.length > 0) {
+                                  const fileName = document.querySelector('#upload-file .file-name');
+                                  fileName.textContent = fileInput.files[0].name;
+                                }
+                            }
+                        </script>
+                    </div>
+                    <div class="column is-half">
+                        <div id="myName" class="control">
+                            <input id="Naming" class="input is-hovered is-medium" type="text" placeholder="저장할 이름을 입력하세요">
+                        </div>
+                    </div>
+                </div>
+
+                {# filemode Generating Button #}
+                <a id="genNoteofile" onclick="importing()" class="button is-large is-fullwidth mt-3 is-primary is-hidden">
+                    <i class="fas fa-arrow-circle-right pr-3"></i>
+                    강의 요약 노트 생성
+                </a>
+                {# urlmode Generating Button #}
+                <a id="genNoteourl" onclick="importingurl()" class="button is-large is-fullwidth mt-3 is-primary is-hidden">
+                    <i class="fas fa-arrow-circle-right pr-3"></i>
+                    강의 요약 노트 생성
+                </a>
+
+                {# 강의 저장 후 로딩바 보여주기 #}
+                <div id="loadProg" class="container has-text-centered mt-3 is-hidden">
+                    <progress class="progress is-small is-primary mb-0" max="100"></progress>
+                    <strong class="is-size-4 mt-0" style="font-family: 'Nanum Gothic', sans-serif;">
+                        노트를 변환하고 있습니다. 잠시만 기다려주세요.
+                    </strong>
+                </div>
+
+                <a id="PDFDownload" href="#" class="button is-large is-fullwidth mt-3 is-danger is-hidden" download>
+                    <i class="fas fa-file-pdf pr-3"></i>
+                    PDF 다운로드
+                </a>
+            </div>
+
+        </section>
+
+    </div>
+    <footer class="footer">
+        <div class="content has-text-centered my-5">
+            <p>
+                <strong>NOTEPOLIS</strong>는 한양대학교 융합전자공학부 이한별에 의해 개발되었습니다. 이 사이트는 Open API들로 제작되었습니다.
+                <br>
+                무단 전제 및 복제를 금합니다.
+                <br>
+                Copyright Hanbyeol Lee, 2022. Hanyang Univ. (SEOUL) All right reserved.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

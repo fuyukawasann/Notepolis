@@ -1,0 +1,19 @@
+certifi
+Flask
+pymongo
+Jinja2
+Django
+MarkupSafe
+ajax
+asgiref
+dnspython
+wheel
+gunicorn
+Fabric
+Flask-SQLAlchemy
+Flask-WTF
+WTForms==2.3.3
+coverage
+# ecdsa
+# paramiko
+# pycrypto

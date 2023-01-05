@@ -64,7 +64,7 @@ def notepolis(filename, vidiname, linux=True):
     height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = round(video.get(cv2.CAP_PROP_FPS))
 
-    #video.release()
+    video.release()
     # 2) 디렉토리를 만든다.
     try:
         if not os.path.exists('./outputs'):
@@ -80,7 +80,7 @@ def notepolis(filename, vidiname, linux=True):
             exit(0)
 
     # 3) n초당 1프레임 저장
-    #fvs = FileVideoStream(vfilepath).start()
+    fvs = FileVideoStream(vfilepath).start()
     #time.sleep(1.0)
     SAMPLING_INTERVAL = 5 #SAMPLIG_INTERVAL초 당 1프레임 저장
     count = 0
@@ -94,10 +94,8 @@ def notepolis(filename, vidiname, linux=True):
     textlist = []
     imglist_out = []
 
-    #while(fvs.more()):
-    while(video.isOpened()):
-        #image = fvs.read()
-        ret, image = video.read()
+    while(fvs.more()):
+        image = fvs.read()
         #지정 시간 당 프레임 추출
         if((count % (fps*SAMPLING_INTERVAL) == 0)):
             print("프레임 번호 : ", str(count))
@@ -128,7 +126,7 @@ def notepolis(filename, vidiname, linux=True):
                         text = text + pytesseract.image_to_string(grayA, config=config) #OCR 동작
                     startFrame = endFrame + 1
                     text = text.replace('\n', '<br>')
-                    textlist.append('\0'+text)
+                    textlist.append(text)
                     print(textlist)
                     imageA_RGB = cv2.cvtColor(frameA, cv2.COLOR_BGR2RGB)
                     imagePIL = Image.fromarray(imageA_RGB)
@@ -141,12 +139,13 @@ def notepolis(filename, vidiname, linux=True):
 
         count += 1
 
-    #fvs.stop()
-    video.release()
+    fvs.stop()
 
 
     # 4-남은 프레임을 PDF로 변환한다.
     #이미지 pdf 생성
+
+
     cvt_rgb_0 = imglist_out[0]
     cvt_rgb_0.save(sfilepath + '/'+ myName+'img_temp.pdf', save_all = True, append_images=imglist_out[1:])
     f = open(sfilepath + '/'+ myName+'img_temp.pdf', 'rb')
@@ -171,22 +170,27 @@ def notepolis(filename, vidiname, linux=True):
     j = 0
     print("imglen : " + str(len(imglist_out)) + "textlen : " + str(len(textlist)))
     for i in range(0,len(textlist)):
+        while(i != 0):
+            if textpdf.getPage(j).extractText().find("start Time") == -1:
+                writer.addPage(textpdf.getPage(j))
+                j += 1
+            else:
+                break
         writer.addPage(origin.getPage(i))
         writer.addPage(textpdf.getPage(j))
-
-        while(True):
-            j += 1
-            try:
-                exstr = textpdf.getPage(j).extractText()
-                if(exstr.find("start",0,6) == -1):
-                    writer.addPage(textpdf.getPage(j))
-                else:
-                    break
-            except:
-                print("doc is over")
-                break
+        j += 1
 
     #최종 pdf 저장
+
+
+    savefilepath = "./static/" + videoName
+    try:
+        if not os.path.exists(savefilepath):
+            os.makedirs(savefilepath)
+    except OSError:
+        print("에러: 파일 경로를 확인할 수 없습니다. " + savefilepath)
+
+
     writer.write(open('./static/' + videoName + '/' + myName + '.pdf', 'wb'))
 
     f.close()
@@ -195,9 +199,6 @@ def notepolis(filename, vidiname, linux=True):
     #임시 pdf 삭제
     os.remove(sfilepath+'/'+myName+'img_temp.pdf')
     os.remove(sfilepath+'/'+'temp.pdf')
-
-    if(linux):
-        os.remove(vfilepath)
 
     print("강의 요약 완료")
 

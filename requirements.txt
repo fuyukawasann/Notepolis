@@ -12,7 +12,6 @@ opencv-python
 scikit-image
 imutils
 argparse
-shutil
 pytube
 ssl
 gunicorn

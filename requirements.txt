@@ -8,6 +8,13 @@ ajax
 asgiref
 dnspython
 wheel
+opencv-python
+scikit-image
+imutils
+argparse
+shutil
+pytube
+ssl
 gunicorn
 Fabric
 Flask-SQLAlchemy

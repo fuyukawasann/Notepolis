@@ -1,4 +1,6 @@
 certifi
+pytesseract
+pdfkit
 Flask
 pymongo
 Jinja2

@@ -14,7 +14,6 @@ opencv-python
 opencv-utils
 opencvpro
 opencvFPS
-oepncv_cffi
 scikit-image
 imutils
 argparse

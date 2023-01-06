@@ -1,4 +1,3 @@
-python3-opencv
 certifi
 pytesseract
 pdfkit
@@ -12,6 +11,10 @@ asgiref
 dnspython
 wheel
 opencv-python
+opencv-utils
+opencvpro
+opencvFPS
+oepncv_cffi
 scikit-image
 imutils
 argparse
